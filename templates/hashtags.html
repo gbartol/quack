@@ -1,0 +1,22 @@
+{% extends '_layout.html' %}
+
+{% block contents %}
+
+{{msg}}
+<div class="hashtag">
+    <form action="/hashtags" method="get">
+        <input type="text" name="hashtag">
+        <input type="submit" value="Pretraži hashtag">
+    </form>
+</div>
+<ul class="quacks">
+    {% for quack in quacks %}
+        <li class="quack">
+            <h3 class="quack_username">{{ quack.username }}</h3>
+            <div class="quack_text">{{ quack.quack }}</div>
+            <div class="quack_datetime">{{ quack.date }}</div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

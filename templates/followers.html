@@ -1,0 +1,14 @@
+{% extends '_layout.html' %}
+
+{% block contents %}
+
+{{msg}}
+<ul class="users">
+    {% for follower in followers %}
+        <li class="user">
+            <h3 class="user_username"></h3>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

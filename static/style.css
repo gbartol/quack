@@ -1,0 +1,23 @@
+body
+{
+    font-family: Verdana;
+    font-size: 12pt;
+} 
+
+table, td, th
+{
+    border: solid 1px black;
+    border-collapse: collapse;
+}
+
+td, th
+{
+    padding: 5px;
+}
+
+header {
+    background-color: #eeff00;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}

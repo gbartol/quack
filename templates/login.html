@@ -1,0 +1,19 @@
+{% extends '_layout.html' %}
+
+{% block contents %}
+<form action="/login" method="post">
+        Username: <input type="text" name="username">
+        <br>
+        Password: <input type="password" name="password">
+        <br>
+        <input type="submit" value="Ulogiraj se!" name="login">
+    </form>
+
+    <p>Nemaš račun? <a href="/register/index">Registriraj se!</a></p>
+
+    <br>
+    {% if msg != '' %}
+        <p style="color: red;">{{ msg }}</p>
+    {% endif %}
+
+{% endblock %}

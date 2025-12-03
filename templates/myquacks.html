@@ -1,0 +1,23 @@
+{% extends '_layout.html' %}
+
+{% block contents %}
+
+<div class="post_quack">
+    <form action="/myquacks" method="post">
+        <input type="text" name="post_quack">
+        <input type="submit" value="Quack!">
+        <br>
+        {{ msg }}
+    </form>
+</div>
+<ul class="quacks">
+    {% for quack in quacks %}
+        <li class="quack">
+            <h3 class="quack_username">{{ quack.username }}</h3>
+            <div class="quack_text">{{ quack.quack }}</div>
+            <div class="quack_datetime">{{ quack.date }}</div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
