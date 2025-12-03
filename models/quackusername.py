@@ -1,5 +1,5 @@
 from datetime import datetime;
-from models.quackservice import QuackService;
+from models.userservice import UserService;
 
 class QuackUsername:
     # Sve isto kao i klasa Quack, samo što umjesto

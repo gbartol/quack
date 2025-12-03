@@ -6,6 +6,7 @@ from models.quackusername import QuackUsername;
 import re;
 
 class QuackService:
+
     @staticmethod
     def get_all_users():
         # Funkcija dohvaća sve korisnike iz tablice users u bazi podataka.
@@ -51,7 +52,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute( 
-            'SELECT * FROM quacks WHERE user_id=%(id_user)s',
+            'SELECT * FROM quacks WHERE id_user=%(id_user)s',
             {'id_user': id_user} );
 
         quacks = [];
@@ -117,26 +118,6 @@ class QuackService:
         #TODO: Napraviti SORT kod svih funkcija koje vraćaju Quack-ove
         quacks.sort(key=comparator, reverse=True);
         return quacks;
-
-    @staticmethod
-    def get_username_by_id( id ):
-        # Funkcija prima ID nekog korisnika
-        # Vraća njegov username
-
-        db = get_db_connection();
-        cursor = db.cursor();
-
-        cursor.execute(
-            'SELECT username FROM users WHERE id=%(id)s',
-            { 'id': id } );
-
-        if( cursor.rowcount() != 1 ):
-            return "NonExistantUser"
-
-        user = cursor.fetchone();
-        cursor.close();
-
-        return user['username'];
 
     @staticmethod
     def get_quacks_by_following( id_user ):

@@ -33,6 +33,7 @@ ALLOWED_ROUTES = {
     'test': ['get_all_users', 'view_users_index', 'users_controller_index'],
 };
 
+@app.route( '/<controller>', defaults={'action': 'index'}, methods=['GET', 'POST'] )
 @app.route( '/<controller>/', defaults={'action': 'index'} )
 @app.route( '/<controller>/<action>', methods=['GET', 'POST'] )
 def dispatch( controller, action ):

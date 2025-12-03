@@ -1,4 +1,5 @@
 from flask import render_template, session;
+from models.userservice import UserService;
 from models.quackservice import QuackService;
 
 class MentionsController:
