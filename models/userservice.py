@@ -14,7 +14,7 @@ class UserService:
             'SELECT username FROM users WHERE id=%(id)s',
             { 'id': id } );
 
-        if( cursor.rowcount() != 1 ):
+        if( cursor.rowcount != 1 ):
             return "NonExistantUser"
 
         user = cursor.fetchone();

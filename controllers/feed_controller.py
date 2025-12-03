@@ -47,4 +47,4 @@ class FeedController:
 
         
 
-        return render_template('feed.html', quacks=quacks msg='' );
+        return render_template('feed.html', quacks=quacks, msg='' );

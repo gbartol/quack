@@ -106,7 +106,7 @@ class QuackService:
 
         # Nađemo sve quackove gdje se spominje @username
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%@", %(username)s, "%")',
+            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%%@", %(username)s, "%%")',
             { 'username': username } );
 
         rows = cursor.fetchall();
@@ -136,7 +136,7 @@ class QuackService:
         rows = cursor.fetchall();
         for row in rows:
             # Dohvatimo sve quackove korisnika kojeg prati
-            quacks_followed_user = get_quacks_by_user( row['id_followed_user'] );
+            quacks_followed_user = QuackService.get_quacks_by_user( row['id_followed_user'] );
             # Stavimo u listu
             quacks.extend( quacks_followed_user );
 

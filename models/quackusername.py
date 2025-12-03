@@ -6,7 +6,7 @@ class QuackUsername:
     # id_user bilježi username
     def __init__( self, id, id_user, quack, date ):
         self.id = id;
-        self.username = QuackService.get_username_by_id( id_user );
+        self.username = UserService.get_username_by_id( id_user );
         self.quack = quack;
         self.date = date;
 
