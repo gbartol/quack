@@ -1,7 +1,7 @@
 # Aplikacija pretpostavlja da u bazi postoji tablica imena 'users' i u njoj stupci: 
 # username (VARCHAR(20)) i password_hash (VARCHAR(255)).
 
-from flask import request, render_template;
+from flask import request, render_template, redirect, session;
 from flask_session import Session;
 import pymysql;
 from pymysql.err import MySQLError;

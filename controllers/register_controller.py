@@ -16,6 +16,8 @@ class RegisterController:
             # Korisnik se pokušava registrirati.
             return register_user();
 
+        return render_template( 'register.html', msg='' )
+
 def register_user():
     # Registracija novog korisnika u bazi podataka.
     username_form = request.form.get( 'username' );
@@ -45,8 +47,7 @@ def register_user():
         if( row['count'] > 0 ):
             # Već postoji korisnik s tim username-om.
             # Ispiši onda opet formu za ulogiravanje.
-            return render_template( 'register.html', 
-                msg='Korisnik s tim usernameom već postoji.' );
+            return render_template( 'register.html', msg='Korisnik s tim usernameom već postoji.' );
 
         # Dakle, ne postoji korisnik s time username-om.
         # Spremi podatke za novog korisnika u tablicu.
@@ -63,7 +64,7 @@ def register_user():
             return render_template( 'register.html', msg=f'Potvrdite registraciju klikom na link koji je poslan na mail {email_form}' )
         else:
             # Nije uspjelo.
-            return render_template( 'register.html', 
-                msg='Problem s dodavanjem novog korisnika u bazu podataka.' );
+            return render_template( 'register.html', msg='Problem s dodavanjem novog korisnika u bazu podataka.' );
+            
     except MySQLError as err:
         return render_template( 'register.html', msg=err );

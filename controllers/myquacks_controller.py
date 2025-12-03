@@ -1,5 +1,7 @@
-from flask import render_template, request;
+from flask import render_template, request, session;
 from datetime import datetime
+from db import get_db_connection;
+from pymysql.err import MySQLError;
 from models.quackservice import QuackService;
 
 class MyquacksController:
@@ -30,4 +32,4 @@ class MyquacksController:
 
         
 
-        return render_template('myquacks.html', quacks=quacks msg='' );
+        return render_template('myquacks.html', quacks=quacks, msg='' );

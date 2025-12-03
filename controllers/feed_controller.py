@@ -1,5 +1,7 @@
-from flask import render_template, request;
-from datetime import datetime
+from flask import render_template, request, session;
+from datetime import datetime;
+from db import get_db_connection;
+from pymysql.err import MySQLError;
 from models.quackservice import QuackService;
 
 class FeedController:
@@ -16,7 +18,7 @@ class FeedController:
 
                 # Nađi id usera s imenom unesenom u formu:
                 cursor.execute(
-                    'SELECT id FROM users WHERE username=%(username)s'
+                    'SELECT id FROM users WHERE username=%(username)s',
                     { 'username': username } );
                 # Da li postoji takav user u bazi?
                 if( cursor.rowcount != 1 ):
@@ -39,7 +41,7 @@ class FeedController:
                     return render_template( 'feed.html', quacks=quacks, msg=f'Sada pratite korisnika {username}!' )
                 else:
                     # Nije uspjelo.
-                    return render_template( 'feed.html', quacks=quacks msg='Problem s dodavanjem quacka u bazu podataka.' );
+                    return render_template( 'feed.html', quacks=quacks, msg='Problem s dodavanjem quacka u bazu podataka.' );
             except MySQLError as err:
                 return render_template( 'feed.html', quacks=quacks, msg=err );
 

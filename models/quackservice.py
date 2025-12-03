@@ -1,6 +1,8 @@
 from db import get_db_connection;
+from pymysql.err import MySQLError;
 from models.user import User;
 from models.quack import Quack;
+from models.quackusername import QuackUsername;
 import re;
 
 class QuackService:
@@ -71,7 +73,7 @@ class QuackService:
 
         # Nađi korisnike koji prate ulogiranog korisnika
         cursor.execute(
-            'SELECT id_user FROM follows WHERE id_followed_user=%(id)s'
+            'SELECT id_user FROM follows WHERE id_followed_user=%(id)s',
             { 'id': id_user } );
 
         # 1. Dohvatimo sve id-eve:
@@ -82,7 +84,7 @@ class QuackService:
         for row in rows:
             # 4. Trazimo usernameove od tih usera
             cursor.execute(
-                'SELECT username FROM users WHERE id=%(id)s'
+                'SELECT username FROM users WHERE id=%(id)s',
                 { 'id': row['id_user'] } );
             # 5. Fetchamo jedini red
             follower = cursor.fetchone();
@@ -103,7 +105,7 @@ class QuackService:
 
         # Nađemo sve quackove gdje se spominje @username
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE %@%(username)s%'
+            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%@", %(username)s, "%")',
             { 'username': username } );
 
         rows = cursor.fetchall();
@@ -125,7 +127,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute(
-            'SELECT username FROM users WHERE id=%(id)s'
+            'SELECT username FROM users WHERE id=%(id)s',
             { 'id': id } );
 
         if( cursor.rowcount() != 1 ):
@@ -145,7 +147,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute( 
-            'SELECT id_followed_user FROM follows WHERE id_user=%(id_user)s'
+            'SELECT id_followed_user FROM follows WHERE id_user=%(id_user)s',
             { 'id_user': id_user } );
 
         quacks = [];
@@ -176,7 +178,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE %%(hashtag)s%' #TODO: provjeriti je li ovo radi
+            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%", %(hashtag)s, "%")', #TODO: provjeriti je li ovo radi
             { 'hashtag': hashtag } );
 
         quacks = [];
