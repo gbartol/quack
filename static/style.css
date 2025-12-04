@@ -30,7 +30,7 @@ header {
     padding: 20px;
     text-align: left;
     margin-bottom: 0;
-    border-bottom: 2px solid #d4cc00;
+    border-bottom: 2px solid #d3cc0a;
 }
 
 header h1 {
@@ -44,7 +44,7 @@ header p {
 }
 
 nav {
-    background-color: rgb(228, 205, 33);
+    background-color: rgb(231, 188, 44);
     padding: 10px;
     text-align: center;
     margin-top: 0;
@@ -58,5 +58,32 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #eeff00;
+    background-color: rgb(231, 196, 79);
+}
+
+nav a.active {
+    background-color: rgb(228, 205, 33);
+    color: black;
+    font-weight: bold;
+}
+
+.quack {
+    background-color: rgb(182, 163, 182);
+    margin: 5px;
+    border: 1px solid rgb(199, 170, 199);
+    border-radius: 5px;
+}
+
+.quack_username {
+    margin: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.quack_text {
+    margin: 7px;
+}
+
+.quack_datetime {
+    margin: 5px;
+    text-align: right;
 }

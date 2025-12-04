@@ -7,19 +7,19 @@
     <title>Quack</title>
 </head>
 <body>
-    <header style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
-        <img src="/static/quack.png" alt="duck" style="width: 100px;">
+    <header style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <img src="/static/quack.png" alt="duck" style="width: 80px;">
         <span class="title">
             <h1 class="title">Quack</h1>
             <p><strong>PMF social network©</strong></p>
         </span>
     </header>
     <nav>
-        <a href="/myquacks">My Quacks</a>
-        <a href="/feed">Feed</a>
-        <a href="/followers">Followers</a>
-        <a href="/mentions">Mentions</a>
-        <a href="/hashtags">Hashtags</a>
+        <a href="/myquacks" {% if request.path.startswith('/myquacks') %}class="active"{% endif %}>My Quacks</a>
+        <a href="/feed" {% if request.path.startswith('/feed') %}class="active"{% endif %}>Feed</a>
+        <a href="/followers" {% if request.path.startswith('/followers') %}class="active"{% endif %}>Followers</a>
+        <a href="/mentions" {% if request.path.startswith('/mentions') %}class="active"{% endif %}>Mentions</a>
+        <a href="/hashtags" {% if request.path.startswith('/hashtags') %}class="active"{% endif %}>Hashtags</a>
     </nav>
 
     

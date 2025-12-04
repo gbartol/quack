@@ -90,7 +90,7 @@ class QuackService:
             # 5. Fetchamo jedini red
             follower = cursor.fetchone();
             # 6. Stavimo username u listu followers
-            followers.append( follower );
+            followers.append( follower['username'] );
 
         cursor.close();
 
@@ -159,7 +159,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%", %(hashtag)s, "%")', #TODO: provjeriti je li ovo radi
+            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%%", %(hashtag)s, "%%")', #TODO: provjeriti je li ovo radi
             { 'hashtag': hashtag } );
 
         quacks = [];

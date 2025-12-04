@@ -1,4 +1,4 @@
-from flask import render_template, request, session;
+from flask import render_template, request, session, redirect;
 from datetime import datetime
 from db import get_db_connection;
 from pymysql.err import MySQLError;
@@ -23,7 +23,7 @@ class MyquacksController:
                 # Provjeri jel uspjelo spremanje u bazu.
                 if( cursor.rowcount == 1 ):
                     # Uspjelo je.
-                    return render_template( 'myquacks.html', quacks=quacks, msg='Objavili ste novi Quack!' )
+                    return redirect('/myquacks');
                 else:
                     # Nije uspjelo.
                     return render_template( 'myquacks.html', quacks=quacks, msg='Problem s dodavanjem quacka u bazu podataka.' );

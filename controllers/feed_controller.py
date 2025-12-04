@@ -16,6 +16,7 @@ class FeedController:
                 db = get_db_connection();
                 cursor = db.cursor();
 
+                
                 # Nađi id usera s imenom unesenom u formu:
                 cursor.execute(
                     'SELECT id FROM users WHERE username=%(username)s',
@@ -24,11 +25,25 @@ class FeedController:
                 if( cursor.rowcount != 1 ):
                     # Ne postoji taj user u bazi! 
                     return render_template( 'feed.html', quacks=quacks, msg=f'Ne postoji korisnik imena {username}.' );
-
+                
                 # Taj user postoji,
                 # 1. spremi njegov ID:
                 row = cursor.fetchone();
                 id_followed_user = row['id'];
+
+                ## Je li korisnik već prati tog korisnika?
+                cursor.execute(
+                    'SELECT * FROM follows WHERE id_user=%(id_user)s AND id_followed_user=%(id_followed_user)s',
+                    { 'id_user': session['id'], 'id_followed_user': id_followed_user }
+                ) 
+                if( cursor.rowcount > 0 ):
+                    return render_template('feed.html', quacks=quacks, msg=f'Već pratite korisnika {username}.');
+                ##
+                ## Je li korisnik želi zapratiti samoga sebe?
+                if( session['id'] == id_followed_user ):
+                    return render_template( 'feed.html', quacks=quacks, msg='Ne možete pratiti samoga sebe!' );
+                ##
+
                 # 2. spremi to u DB tablicu follows(id_user, id_followed_user)
                 cursor.execute( 
                     'INSERT INTO follows (id_user, id_followed_user) VALUES (%(id_user)s, %(id_followed_user)s)',
