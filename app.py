@@ -23,6 +23,7 @@ def index():
 ALLOWED_ROUTES = {
     'login': ['index'],
     'register': ['index'],
+    'logout': ['index'],
     'myquacks': ['index'],
     'feed': ['index'],
     'followers': ['index'],

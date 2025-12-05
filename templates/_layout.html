@@ -14,12 +14,14 @@
             <p><strong>PMF social network©</strong></p>
         </span>
     </header>
-    <nav>
+    <nav class="nav">
         <a href="/myquacks" {% if request.path.startswith('/myquacks') %}class="active"{% endif %}>My Quacks</a>
         <a href="/feed" {% if request.path.startswith('/feed') %}class="active"{% endif %}>Feed</a>
         <a href="/followers" {% if request.path.startswith('/followers') %}class="active"{% endif %}>Followers</a>
         <a href="/mentions" {% if request.path.startswith('/mentions') %}class="active"{% endif %}>Mentions</a>
         <a href="/hashtags" {% if request.path.startswith('/hashtags') %}class="active"{% endif %}>Hashtags</a>
+
+        <a href="/logout" class="logout">{% if session.get( 'id' ) %}Log Out{% endif %}</a>
     </nav>
 
     

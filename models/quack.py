@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime;
 
 class Quack:
     # Klasa koja opisuje jedan quack.
@@ -7,7 +7,7 @@ class Quack:
         self.id = id;
         self.id_user = id_user;
         self.quack = quack;
-        self.date = date;
+        self.date = date.strftime('%Y-%m-%d %H:%M');
 
     def __repr__(self):
         # Funkcija koja vraća string-reprezentaciju objekta tipa User.

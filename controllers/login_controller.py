@@ -32,7 +32,7 @@ class LoginController:
 
                 # Dohvati iz baze podatke za korisnika s username-om iz forme.
                 cursor.execute(
-                    'SELECT * FROM users WHERE username=%(username)s',
+                    'SELECT * FROM dz2_users WHERE username=%(username)s',
                     {'username': username_form} );
 
                 # Da li postoji takav user u bazi?

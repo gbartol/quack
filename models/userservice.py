@@ -11,7 +11,7 @@ class UserService:
         cursor = db.cursor();
 
         cursor.execute(
-            'SELECT username FROM users WHERE id=%(id)s',
+            'SELECT username FROM dz2_users WHERE id=%(id)s',
             { 'id': id } );
 
         if( cursor.rowcount != 1 ):

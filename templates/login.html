@@ -1,19 +1,28 @@
 {% extends '_layout.html' %}
 
 {% block contents %}
-<form action="/login" method="post">
-        Username: <input type="text" name="username">
+<div class="login_register_main">
+    <div class="login_register_content">
+    <form action="/login" method="post">
+        Username:
         <br>
-        Password: <input type="password" name="password">
+        <input type="text" name="username" placeholder="Username..." class="login_register_input">
         <br>
-        <input type="submit" value="Ulogiraj se!" name="login">
+        Password:
+        <br>
+        <input type="password" name="password" placeholder="Password..." class="login_register_input">
+        <br>
+        <input type="submit" value="Ulogiraj se!" name="login" class="login_register_button">
     </form>
 
-    <p>Nemaš račun? <a href="/register">Registriraj se!</a></p>
-
+    <br>
+    <br>
+    <p style="text-align: center;">Nemaš račun? <a href="/register">Registriraj se!</a></p>
+    </div>
     <br>
     {% if msg != '' %}
         <p style="color: red;">{{ msg }}</p>
     {% endif %}
-
+    
+</div>
 {% endblock %}

@@ -14,7 +14,7 @@ class QuackService:
         db = get_db_connection();
         cursor = db.cursor();
 
-        cursor.execute( 'SELECT * FROM users' );
+        cursor.execute( 'SELECT * FROM dz2_users' );
 
         users = [];
         for row in cursor:
@@ -32,7 +32,7 @@ class QuackService:
         db = get_db_connection();
         cursor = db.cursor();
 
-        cursor.execute( 'SELECT * FROM quacks' );
+        cursor.execute( 'SELECT * FROM dz2_quacks' );
 
         quacks = [];
         for row in cursor:
@@ -52,7 +52,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute( 
-            'SELECT * FROM quacks WHERE id_user=%(id_user)s',
+            'SELECT * FROM dz2_quacks WHERE id_user=%(id_user)s',
             {'id_user': id_user} );
 
         quacks = [];
@@ -74,7 +74,7 @@ class QuackService:
 
         # Nađi korisnike koji prate ulogiranog korisnika
         cursor.execute(
-            'SELECT id_user FROM follows WHERE id_followed_user=%(id)s',
+            'SELECT id_user FROM dz2_follows WHERE id_followed_user=%(id)s',
             { 'id': id_user } );
 
         # 1. Dohvatimo sve id-eve:
@@ -85,7 +85,7 @@ class QuackService:
         for row in rows:
             # 4. Trazimo usernameove od tih usera
             cursor.execute(
-                'SELECT username FROM users WHERE id=%(id)s',
+                'SELECT username FROM dz2_users WHERE id=%(id)s',
                 { 'id': row['id_user'] } );
             # 5. Fetchamo jedini red
             follower = cursor.fetchone();
@@ -106,7 +106,7 @@ class QuackService:
 
         # Nađemo sve quackove gdje se spominje @username
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%%@", %(username)s, "%%")',
+            'SELECT * FROM dz2_quacks WHERE quack LIKE CONCAT("%%@", %(username)s, "%%")',
             { 'username': username } );
 
         rows = cursor.fetchall();
@@ -128,7 +128,7 @@ class QuackService:
         cursor = db.cursor();
 
         cursor.execute( 
-            'SELECT id_followed_user FROM follows WHERE id_user=%(id_user)s',
+            'SELECT id_followed_user FROM dz2_follows WHERE id_user=%(id_user)s',
             { 'id_user': id_user } );
 
         quacks = [];
@@ -158,9 +158,11 @@ class QuackService:
         db = get_db_connection();
         cursor = db.cursor();
 
+        search_pattern = f'%{hashtag}%';
+
         cursor.execute(
-            'SELECT * FROM quacks WHERE quack LIKE CONCAT("%%", %(hashtag)s, "%%")', #TODO: provjeriti je li ovo radi
-            { 'hashtag': hashtag } );
+            'SELECT * FROM dz2_quacks WHERE quack LIKE %(search_pattern)s', #TODO: provjeriti je li ovo radi
+            { 'search_pattern': search_pattern } );
 
         quacks = [];
 

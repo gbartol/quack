@@ -5,8 +5,8 @@
 <ul class="quacks">
     {% for quack in quacks %}
         <li class="quack">
-            <h3 class="quack_username">{{ quack.username }}</h3>
-            <div class="quack_text">{{ quack.quack }}</div>
+            <h3 class="quack_username">@{{ quack.username }}</h3>
+            <div class="quack_text">{{ quack.quack | safe }}</div>
             <div class="quack_datetime">{{ quack.date }}</div>
         </li>
     {% endfor %}

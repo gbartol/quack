@@ -67,6 +67,33 @@ nav a.active {
     font-weight: bold;
 }
 
+.login_register_main {
+    text-align: center;
+    margin: 10px;
+}
+
+.login_register_content {
+    display: inline-block;
+    text-align: left;
+    margin: 10px;
+}
+
+.login_register_input {
+    border: 2px solid rgb(228, 205, 33);
+    border-radius: 8px;
+    width: 100%;
+    padding: 8px;
+}
+
+.login_register_button {
+    background-color: rgb(228, 205, 33);
+    float: right;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
 .quack {
     background-color: rgb(182, 163, 182);
     margin: 5px;
@@ -86,4 +113,28 @@ nav a.active {
 .quack_datetime {
     margin: 5px;
     text-align: right;
+}
+
+.quack_follow_hashtag_input {
+    border: 2px solid rgb(231, 188, 44);
+    border-radius: 8px;
+    width: 100%;
+    padding: 8px;
+    margin: 15px 0;
+}
+
+.quack_follow_hashtag_button {
+    background-color: rgb(228, 205, 33);
+    float: right;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.user_username {
+    background-color: rgb(182, 163, 182);
+    margin: 5px;
+    border: 1px solid rgb(199, 170, 199);
+    border-radius: 5px;
 }

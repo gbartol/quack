@@ -1,4 +1,4 @@
-from flask import render_template, request, session;
+from flask import render_template, request, session, redirect;
 from datetime import datetime;
 from db import get_db_connection;
 from pymysql.err import MySQLError;
@@ -7,9 +7,12 @@ from models.quackservice import QuackService;
 class FeedController:
     def index(self):
         #TODO: dodati provjeru je li korisnik ulogiran, ako nije redirectati na /login
+        if( session.get( 'id' ) is None ):
+            return redirect( '/login' );
+
         quacks = QuackService.get_quacks_by_following( session['id'] );
 
-        if( request.method == 'POST' and request.form.get( 'username' ) ): # TODO: Dodati i za micanje korisnika
+        if( request.method == 'POST' and request.form.get( 'follow' ) ): # TODO: Dodati i za micanje korisnika
             # Dohvatimo uneseni username
             username = request.form.get( 'username' );
             try:
@@ -19,7 +22,7 @@ class FeedController:
                 
                 # Nađi id usera s imenom unesenom u formu:
                 cursor.execute(
-                    'SELECT id FROM users WHERE username=%(username)s',
+                    'SELECT id FROM dz2_users WHERE username=%(username)s',
                     { 'username': username } );
                 # Da li postoji takav user u bazi?
                 if( cursor.rowcount != 1 ):
@@ -33,7 +36,7 @@ class FeedController:
 
                 ## Je li korisnik već prati tog korisnika?
                 cursor.execute(
-                    'SELECT * FROM follows WHERE id_user=%(id_user)s AND id_followed_user=%(id_followed_user)s',
+                    'SELECT * FROM dz2_follows WHERE id_user=%(id_user)s AND id_followed_user=%(id_followed_user)s',
                     { 'id_user': session['id'], 'id_followed_user': id_followed_user }
                 ) 
                 if( cursor.rowcount > 0 ):
@@ -46,20 +49,58 @@ class FeedController:
 
                 # 2. spremi to u DB tablicu follows(id_user, id_followed_user)
                 cursor.execute( 
-                    'INSERT INTO follows (id_user, id_followed_user) VALUES (%(id_user)s, %(id_followed_user)s)',
+                    'INSERT INTO dz2_follows (id_user, id_followed_user) VALUES (%(id_user)s, %(id_followed_user)s)',
                     {'id_user': session['id'], 'id_followed_user': id_followed_user } );
                 db.commit();
 
                 # Provjeri jel uspjelo spremanje u bazu.
                 if( cursor.rowcount == 1 ):
                     # Uspjelo je.
-                    return render_template( 'feed.html', quacks=quacks, msg=f'Sada pratite korisnika {username}!' )
+                    return redirect('/feed');
                 else:
                     # Nije uspjelo.
-                    return render_template( 'feed.html', quacks=quacks, msg='Problem s dodavanjem quacka u bazu podataka.' );
+                    return render_template( 'feed.html', quacks=quacks, msg='Problem s dodavanjem followa u bazu podataka.' );
             except MySQLError as err:
                 return render_template( 'feed.html', quacks=quacks, msg=err );
 
-        
+        elif( request.method == 'POST' and request.form.get( 'remove' ) ):
+            # Dohvatimo uneseni username
+            username = request.form.get( 'username' );
+
+            try:
+                db = get_db_connection();
+                cursor = db.cursor();
+
+                # Nađi id usera s imenom unesenom u formu:
+                cursor.execute(
+                    'SELECT id FROM dz2_users WHERE username=%(username)s',
+                    { 'username': username }
+                )
+                # Postoji li taj user u bazi?
+                if( cursor.rowcount != 1 ):
+                    # Ne postoji taj user u bazi! 
+                    return render_template( 'feed.html', quacks=quacks, msg=f'Ne postoji korisnik imena {username}.' );
+
+                # Taj user postoji,
+                # 1. spremi njegov ID:
+                row = cursor.fetchone();
+                id_followed_user = row['id'];
+
+                # 2. spremi to u DB tablicu follows(id_user, id_followed_user)
+                cursor.execute( 
+                    'DELETE FROM dz2_follows WHERE id_user=%(id_user)s AND id_followed_user=%(id_followed_user)s',
+                    {'id_user': session['id'], 'id_followed_user': id_followed_user } );
+                db.commit();
+
+                # Provjeri jel uspjelo spremanje u bazu.
+                if( cursor.rowcount == 1 ):
+                    # Uspjelo je.
+                    return redirect('/feed');
+                else:
+                    # Nije uspjelo.
+                    return render_template( 'feed.html', quacks=quacks, msg=f'Problem s brisanjem followa u bazu podataka. Vjerojatno ne pratite korisnika {username}.' );
+
+            except MySQLError as err:
+                return render_template( 'feed.html', quacks=quacks, msg=err );
 
         return render_template('feed.html', quacks=quacks, msg='' );

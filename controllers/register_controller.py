@@ -39,7 +39,7 @@ def register_user():
 
         # Uoči: as count -> 'count' će biti ključ unutar row kad izvršimo upit.
         cursor.execute( 
-            'SELECT COUNT(*) AS count FROM users where username=%(username)s',
+            'SELECT COUNT(*) AS count FROM dz2_users where username=%(username)s',
             {'username': username_form} );
 
         row = cursor.fetchone(); # Dohvati (jedini) redak kao rezultat upita.
@@ -52,7 +52,7 @@ def register_user():
         # Dakle, ne postoji korisnik s time username-om.
         # Spremi podatke za novog korisnika u tablicu.
         cursor.execute( 
-            'INSERT INTO users (username, password_hash, email, registration_sequence) VALUES (%(username)s, %(hash)s, %(email)s, %(registration_sequence)s)',
+            'INSERT INTO dz2_users (username, password_hash, email, registration_sequence) VALUES (%(username)s, %(hash)s, %(email)s, %(registration_sequence)s)',
             {'username': username_form, 'hash': generate_password_hash(password_form), 'email': email_form, 'registration_sequence': registration_sequence } );
 
         # Upit je tipa INSERT -> treba i commit da bi se izvršio!
