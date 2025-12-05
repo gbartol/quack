@@ -11,8 +11,10 @@ import re;
 
 class LoginController:
     def index(self):
-        #TODO: dodati provjeru postoji li session korisnika, ako da redirecta se na /myquacks
-        #TODO: dodati logout korisnika
+        # Ako je korisnik već ulogiran, redirectaj ga na /myquacks.
+        if( session.get('id') ):
+            return redirect('/myquacks');
+
         if( request.method == 'POST' and request.form.get( 'login' ) ):
             # Korisnik se pokušava ulogirati.
             # Ulogiravanje postojećeg korisnika.

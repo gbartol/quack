@@ -12,6 +12,10 @@ import string;
 
 class RegisterController:
     def index(self):
+        # Ako je korisnik već ulogiran, redirectaj na /myquacks.
+        if( session.get('id') ):
+            return redirect('/myquacks');
+
         if( request.method == 'POST' and request.form.get( 'register' ) ):
             # Korisnik se pokušava registrirati.
             return register_user();
@@ -23,7 +27,26 @@ def register_user():
     username_form = request.form.get( 'username' );
     password_form = request.form.get( 'password' );
     email_form = request.form.get( 'email' );
-    registration_sequence = random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters);
+
+    # Ovdje provjeravamo je li nekom korisniku već dan isti registration sequence
+    # I ako je tada generiramo novi dok ne izgeneriramo neki koji još ne postoji
+    flag = 1;
+    while(flag):
+        try:
+            registration_sequence = random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters);
+            
+            db = get_db_connection();
+            cursor = db.cursor();
+
+            cursor.execute(
+                'SELECT * FROM dz2_users WHERE registration_sequence=%(registration_sequence)s',
+                { 'registration_sequence': registration_sequence } );
+
+            if( cursor.rowcount == 0):
+                flag = 0;
+
+        except MySQLError as err:
+            return render_template( 'register.html', msg=err );
 
     if( not (username_form and password_form and email_form and re.match( r'^[A-Za-z]{1,20}$', username_form )) ):
         # Korisnik nije unio username ili password ili username nije niz slova.
@@ -52,8 +75,8 @@ def register_user():
         # Dakle, ne postoji korisnik s time username-om.
         # Spremi podatke za novog korisnika u tablicu.
         cursor.execute( 
-            'INSERT INTO dz2_users (username, password_hash, email, registration_sequence) VALUES (%(username)s, %(hash)s, %(email)s, %(registration_sequence)s)',
-            {'username': username_form, 'hash': generate_password_hash(password_form), 'email': email_form, 'registration_sequence': registration_sequence } );
+            'INSERT INTO dz2_users (username, password_hash, email, registration_sequence, has_registered) VALUES (%(username)s, %(hash)s, %(email)s, %(registration_sequence)s, %(has_registered)s)',
+            {'username': username_form, 'hash': generate_password_hash(password_form), 'email': email_form, 'registration_sequence': registration_sequence, 'has_registered': 0 } );
 
         # Upit je tipa INSERT -> treba i commit da bi se izvršio!
         db.commit();
