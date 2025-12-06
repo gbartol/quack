@@ -1,7 +1,8 @@
 # Aplikacija pretpostavlja da u bazi postoji tablica imena 'users' i u njoj stupci: 
 # username (VARCHAR(20)) i password_hash (VARCHAR(255)).
 
-from flask import request, render_template;
+from flask import request, render_template, session, redirect;
+from flask_mail import Mail, Message;
 import pymysql;
 from pymysql.err import MySQLError;
 from db import get_db_connection, close_db;
@@ -33,7 +34,7 @@ def register_user():
     flag = 1;
     while(flag):
         try:
-            registration_sequence = random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters);
+            registration_sequence = random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + random.choice(string.ascii_letters);
             
             db = get_db_connection();
             cursor = db.cursor();
@@ -46,6 +47,7 @@ def register_user():
                 flag = 0;
 
         except MySQLError as err:
+            cursor.close();
             return render_template( 'register.html', msg=err );
 
     if( not (username_form and password_form and email_form and re.match( r'^[A-Za-z]{1,20}$', username_form )) ):
@@ -70,6 +72,7 @@ def register_user():
         if( row['count'] > 0 ):
             # Već postoji korisnik s tim username-om.
             # Ispiši onda opet formu za ulogiravanje.
+            cursor.close();
             return render_template( 'register.html', msg='Korisnik s tim usernameom već postoji.' );
 
         # Dakle, ne postoji korisnik s time username-om.
@@ -84,10 +87,13 @@ def register_user():
         # Provjeri jel uspjelo spremanje u bazu.
         if( cursor.rowcount == 1 ):
             # Uspjelo je.
-            return render_template( 'register.html', msg=f'Potvrdite registraciju klikom na link koji je poslan na mail {email_form}' )
+            cursor.close();
+            return redirect(f'/send-mail?email={email_form}');
         else:
             # Nije uspjelo.
+            cursor.close();
             return render_template( 'register.html', msg='Problem s dodavanjem novog korisnika u bazu podataka.' );
             
     except MySQLError as err:
+        cursor.close();
         return render_template( 'register.html', msg=err );

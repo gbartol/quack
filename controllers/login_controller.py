@@ -41,24 +41,34 @@ class LoginController:
                 if( cursor.rowcount != 1 ):
                     # Ne postoji taj user u bazi! 
                     # (Obično ne želimo reći da ne postoji taj korisnik nego samo "Pogrešan username ili password.")
+                    cursor.close();
                     return render_template( 'login.html', msg=f'Ne postoji korisnik imena {username_form}.' );
 
-                # Da, taj user postoji. 
-                # Dohvati njegove podatke i provjeri password, tj. usporedi s password hashom iz baze.
+                # Da, taj user postoji:
+                               
+                # Dohvati njegove podatke
                 row = cursor.fetchone();
+                # 1. Provjeri je li potvrdio svoj account
+                if( not row['has_registered'] ):
+                    cursor.close();
+                    return render_template( 'login.html', msg=f'Molimo potvrdite svoj račun. Mail vam je poslan na adresu {row['email']}.' );
+                # 2. Provjeri password, tj. usporedi s password hashom iz baze.
                 password_hash = row['password_hash'];
                 if( check_password_hash( password_hash, password_form ) ):
                     # Password je ispravan. Ulogiraj usera -> sad bismo ovdje spremili podatke u tom useru u session.
                     # Spremi usera u session:
                     session['id'] = row['id'];
                     # Redirectaj na početnu stranicu
+                    cursor.close();
                     return redirect('/myquacks');
                 else:
                     # Password nije ispravan. Ispiši ponovno formu za login.
                     # (Obično ne želimo reći da je password pogrešan nego samo "Pogrešan username ili password.")
+                    cursor.close();
                     return render_template( 'login.html', msg=f'Password nije ispravan.' );
 
             except MySQLError as err:
+                cursor.close();
                 return render_template( 'login.html', msg=err );
 
         # Ispiši formu za ulogiravanje.

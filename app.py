@@ -1,6 +1,9 @@
-from flask import Flask, abort, redirect, session;
+from flask import Flask, abort, redirect, session, request;
 from flask_session import Session;
+from flask_mail import Mail, Message;
+from pymysql.err import MySQLError;
 import importlib;
+from db import get_db_connection;
 import db;
 
 # --------------------------- Konfiguracija
@@ -13,6 +16,9 @@ app.config['SESSION_TYPE'] = 'cachelib';
 app.config['SESSION_PERMANENT'] = False;
 Session(app);
 
+# --------------------------- Mail
+mail = Mail( app );  
+
 # --------------------------- Rute
 @app.route('/')
 def index():
@@ -24,6 +30,7 @@ ALLOWED_ROUTES = {
     'login': ['index'],
     'register': ['index'],
     'logout': ['index'],
+    'confirm': ['index'],
     'myquacks': ['index'],
     'feed': ['index'],
     'followers': ['index'],
@@ -61,3 +68,33 @@ def dispatch( controller, action ):
 
     except Exception as e:
         abort( 500, str(e) );
+
+@app.route('/send-mail')
+def send_mail():
+    email = request.args.get( 'email' );
+
+    try:
+        db = get_db_connection();
+        cursor = db.cursor();
+
+        cursor.execute (
+            'SELECT registration_sequence FROM dz2_users WHERE email=%(email)s',
+            { 'email': email }
+        );
+
+        row = cursor.fetchone();
+        registration_sequence = row['registration_sequence'];
+
+        msg = Message(
+            subject = 'Registracija na Quack',
+            recipients = [ email ],
+            body = f'Za registraciju na Quack klinkite link: http://127.0.0.1:5000/confirm?regseq={registration_sequence}'
+        );
+        mail.send( msg );
+
+        cursor.close();
+        return render_template( 'register.html', msg=f'Potvrdite svoj račun klikom na link koji je poslan na vaš mail.' )
+
+    except MySQLError as err:
+        cursor.close();
+        return render_template( 'register.html', msg=err );
