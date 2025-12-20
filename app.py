@@ -1,4 +1,4 @@
-from flask import Flask, abort, redirect, session, request;
+from flask import Flask, abort, redirect, session, request, render_template;
 from flask_session import Session;
 from flask_mail import Mail, Message;
 from pymysql.err import MySQLError;
@@ -17,7 +17,7 @@ app.config['SESSION_PERMANENT'] = False;
 Session(app);
 
 # --------------------------- Mail
-mail = Mail( app );  
+mail = Mail( app );
 
 # --------------------------- Rute
 @app.route('/')
@@ -48,11 +48,11 @@ def dispatch( controller, action ):
     if( controller not in ALLOWED_ROUTES
             or action not in ALLOWED_ROUTES[controller] ):
         abort( 404, f'Unknown controller {controller} and/or action {action}.' );
-    
+
     try:
         # Dinamički importamo modul u kojem će se nalaziti odgovarajući kontroler.
         module = importlib.import_module( f'controllers.{controller}_controller' );
-    
+
         # Odredimo ime klase traženog kontrolera.
         controller_classname = f'{controller.capitalize()}Controller';
         controller_class = getattr( module, controller_classname );
